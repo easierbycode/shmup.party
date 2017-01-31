@@ -1,0 +1,13 @@
+NOW
+===
+
+
+
+LATER
+=====
+- put ammo limits (auto-switch to next gun when out of ammo)
+
+
+DONE
+====
+- add explosion on rocket impact
