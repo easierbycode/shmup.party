@@ -6,5 +6,15 @@ export class Game extends Phaser.Game {
     constructor(...args) {
         super(...args);
         SuperEventEmitter.mixin(this);
+
+        this.baddieHitPlayer   = function( baddie, player ) {
+            // player.damage( baddie );
+        }
+        
+        this.bulletHitBaddie   = function( baddie, bullet ) {
+            bullet.kill();
+            
+            let destroyed   = baddie.damage( bullet.data.bulletManager.hitPoints || 1 );
+        }
     }
 }
