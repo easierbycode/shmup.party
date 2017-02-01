@@ -22,6 +22,8 @@ export class LoadingState extends Phaser.State {
         {
             this.load.image('bullet' + i, 'assets/images/bullet' + i + '.png');
         }
+
+        this.load.spritesheet( 'kaboom', 'assets/images/explosion.png', 64, 64, 23 );
     }
 
     create() {
