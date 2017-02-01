@@ -5,13 +5,14 @@
 
 export class Beam extends Phaser.Weapon {
     
+    hitPoints   = 3;
+    
     constructor( player, game, parent = game.world, name = 'Beam', addToStage = false, enableBody = true, physicsBodyType = Phaser.Physics.ARCADE ) {
         super( game, parent, name, addToStage, enableBody, physicsBodyType );
         
-        this.nextFire = 0;
-        this.bulletSpeed = 1000;
-        // this.fireRate = 45;
-        this.fireRate = 180;
+        this.nextFire       = 0;
+        this.bulletSpeed    = 1000;
+        this.fireRate       = 180;
 
         this.createBullets( 64, 'bullet11' );
 

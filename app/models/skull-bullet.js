@@ -15,6 +15,8 @@ class Bullet extends Phaser.Bullet {
 
 export class SkullBullet extends Phaser.Weapon {
 
+    hitPoints   = 8;
+    
     constructor( player, game, parent = game.world, name = 'Skull Bullet', addToStage = false, enableBody = true, physicsBodyType = Phaser.Physics.ARCADE ) {
         super( game, parent, name, addToStage, enableBody, physicsBodyType );
         
