@@ -6,6 +6,8 @@ export class LoadingState extends Phaser.State {
         loader.anchor.set(0.5, 0.5);
         this.load.setPreloadSprite(loader);
 
+        this.load.atlasJSONHash( 'zombie', 'assets/images/zombie.png', 'assets/images/zombie.json' );
+        
         this.load.audio( 'beam', ['assets/sounds/beam.mp3'] );
         this.load.audio( 'ledSpirals', ['assets/sounds/led-spirals.mp3'] );
         this.load.audio( 'pulseFire', ['assets/sounds/pulse-fire.mp3'] );

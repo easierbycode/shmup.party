@@ -2,7 +2,9 @@
 import GAME from '../constants/game';
 import PLAYER from '../constants/player';
 import STATE_EVENTS from '../constants/state-events';
+import WAVE1 from '../constants/wave1';
 import { Player } from '../models/player';
+import { Zombie } from '../models/zombie';
 
 
 export class ExampleState extends Phaser.State {
@@ -17,6 +19,18 @@ export class ExampleState extends Phaser.State {
         
         this.bg                 = this.game.add.tileSprite( 0, 0, 2000, 2000, 'earth' );
         this.bg.fixedToCamera   = true;
+
+        //  explosion pool
+        this.game.explosions     = new Phaser.Group( this.game );
+
+        for ( let i = 0; i < 64; i++ )  {
+            var explosionAnimation = this.game.explosions.create( 0, 0, 'kaboom', [0], false );
+            explosionAnimation.anchor.setTo( 0.5, 0.5 );
+            explosionAnimation.animations.add( 'kaboom' );
+        }
+
+        this.game.baddies       = new Phaser.Group( this.game );
+        this.game.players       = new Phaser.Group( this.game );
         
         this.music = this.game.add.audio( 'ledSpirals' );
         this.music.play();
@@ -27,9 +41,12 @@ export class ExampleState extends Phaser.State {
         
         [ this.pad1, this.pad2 ].forEach(function( pad ) {
             pad.addCallbacks( pad, { onConnect: function() {
-                this.game[ 'player' + (this.index + 1) ] = new Player(pad, this.game, (PLAYER.DEFAULT_X + (PLAYER.WIDTH * this.index)), PLAYER.DEFAULT_Y);
+                let newPlayer   = new Player( pad, this.game, (PLAYER.DEFAULT_X + (PLAYER.WIDTH * this.index)), PLAYER.DEFAULT_Y );
+                this.game.players.add( newPlayer );
             } });
         });
+
+        WAVE1.createBaddies( this.game );
         
         this.game.trigger(STATE_EVENTS.EXAMPLE_COMPLETED);
     }
@@ -47,40 +64,50 @@ export class ExampleState extends Phaser.State {
     }
     
     update() {
-        [ 1, 2 ].forEach(function( idx ) {
+        [ 1, 2 ].forEach(( idx ) => {
 
-            var player  = this.game['player' + idx];
-            var gamepad = this['pad' + idx];
+            if ( this.game.players.length < idx )  return;
             
-            if ( player ) {
-                player.body.velocity.x        = 0;
-                player.body.velocity.y        = 0;
-                
-                if ( gamepad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) < -0.1 ) {
-                    player.body.velocity.x    = -150;
-                } else if ( gamepad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) > 0.1 ) {
-                    player.body.velocity.x    = 150;
-                }
+            let player  = this.game.players.getChildAt( idx - 1 );
+            let gamepad = this['pad' + idx];
+
+            player.body.velocity.x        = 0;
+            player.body.velocity.y        = 0;
             
-                if ( gamepad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y) < -0.1 ) {
-                    player.body.velocity.y    = -150;
-                } else if (gamepad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y) > 0.1) {
-                    player.body.velocity.y    = 150;
-                }
-
-                var rightStickX     = gamepad.axis( Phaser.Gamepad.XBOX360_STICK_RIGHT_X );
-                var rightStickY     = gamepad.axis( Phaser.Gamepad.XBOX360_STICK_RIGHT_Y );
-                rightStickX = ( Math.abs( rightStickX ) > gamepad.deadZone ) ? rightStickX : 0;
-                rightStickY = ( Math.abs( rightStickY ) > gamepad.deadZone ) ? rightStickY : 0;
-                var thumbstickAngle = this.coordinatesToRadians( rightStickX, rightStickY );
-                
-                if ( thumbstickAngle != null )  player.rotation  = thumbstickAngle;
-
-                if ( gamepad.isDown( Phaser.Gamepad.XBOX360_RIGHT_TRIGGER ) ) {
-                    player.weapons[player.currentWeapon].fire();
-                }
+            if ( gamepad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) < -0.1 ) {
+                player.body.velocity.x    = -150;
+            } else if ( gamepad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_X) > 0.1 ) {
+                player.body.velocity.x    = 150;
             }
-        }, this)
+        
+            if ( gamepad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y) < -0.1 ) {
+                player.body.velocity.y    = -150;
+            } else if (gamepad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y) > 0.1) {
+                player.body.velocity.y    = 150;
+            }
+
+            let rightStickX     = gamepad.axis( Phaser.Gamepad.XBOX360_STICK_RIGHT_X );
+            let rightStickY     = gamepad.axis( Phaser.Gamepad.XBOX360_STICK_RIGHT_Y );
+            rightStickX         = ( Math.abs( rightStickX ) > gamepad.deadZone ) ? rightStickX : 0;
+            rightStickY         = ( Math.abs( rightStickY ) > gamepad.deadZone ) ? rightStickY : 0;
+            let thumbstickAngle = this.coordinatesToRadians( rightStickX, rightStickY );
+
+            if ( thumbstickAngle != null ) {
+                player.rotation  = thumbstickAngle;
+
+                player.weapons[player.currentWeapon].fire();
+            }
+        });
+
+        let bullets = [];
+        
+        this.game.players.forEachAlive(( player ) => {
+            bullets.push( player.weapons[player.currentWeapon].bullets );
+        });
+
+        this.game.baddies.forEachAlive(( baddie ) => {
+            this.game.physics.arcade.overlap( baddie, bullets, this.game.bulletHitBaddie );
+        });
     }
 
     render() {
