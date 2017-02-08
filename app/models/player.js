@@ -10,6 +10,7 @@ import { SplitShot } from './split-shot';
 export class Player extends Phaser.Sprite {
     
     currentWeapon   = 0;
+    gamepad;
     weapons         = [];
     
     constructor(gamepad, game, x = 0, y = 0, key = 'dude') {
@@ -29,7 +30,9 @@ export class Player extends Phaser.Sprite {
         this.weapons.push( new SkullBullet( this, game ) );
         this.weapons.push( new SplitShot( this, game ) );
         
-        var changeWeaponButton  = gamepad.getButton( Phaser.Gamepad.XBOX360_RIGHT_BUMPER );
+        this.gamepad            = gamepad;
+
+        var changeWeaponButton  = this.gamepad.getButton( Phaser.Gamepad.XBOX360_RIGHT_BUMPER );
         changeWeaponButton.onDown.add( this.nextWeapon, this );
     }
     

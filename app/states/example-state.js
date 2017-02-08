@@ -64,12 +64,12 @@ export class ExampleState extends Phaser.State {
     }
     
     update() {
-        [ 1, 2 ].forEach(( idx ) => {
+        let bullets = [];
+        
+        this.game.players.forEachAlive(( player ) => {
+            bullets.push( player.weapons[player.currentWeapon].bullets );
 
-            if ( this.game.players.length < idx )  return;
-            
-            let player  = this.game.players.getChildAt( idx - 1 );
-            let gamepad = this['pad' + idx];
+            let gamepad = player.gamepad;
 
             player.body.velocity.x        = 0;
             player.body.velocity.y        = 0;
@@ -97,12 +97,6 @@ export class ExampleState extends Phaser.State {
 
                 player.weapons[player.currentWeapon].fire();
             }
-        });
-
-        let bullets = [];
-        
-        this.game.players.forEachAlive(( player ) => {
-            bullets.push( player.weapons[player.currentWeapon].bullets );
         });
 
         this.game.baddies.forEachAlive(( baddie ) => {
