@@ -12,6 +12,7 @@ export class LoadingState extends Phaser.State {
         this.load.audio( 'ledSpirals', ['assets/sounds/led-spirals.mp3'] );
         this.load.audio( 'pulseFire', ['assets/sounds/pulse-fire.mp3'] );
         this.load.audio( 'rocketFire', ['assets/sounds/rocket-fire.mp3'] );
+        this.load.audio( 'skullBulletFire', ['assets/sounds/skull-bullet-fire.mp3'] );
         
         this.load.image( 'dude', 'assets/images/trooper.png' );
         this.load.image( 'earth', 'assets/images/scorched-earth.png' );
