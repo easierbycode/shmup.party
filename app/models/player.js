@@ -13,11 +13,11 @@ export class Player extends Phaser.Sprite {
     gamepad;
     weapons         = [];
     
-    constructor(gamepad, game, x = 0, y = 0, key = 'dude') {
-        super(game, x, y, key);
+    constructor( gamepad, game, x = 0, y = 0, key = 'dude' ) {
+        super( game, x, y, key );
 
-        game.add.existing(this);
-        game.physics.arcade.enable(this);
+        game.add.existing( this );
+        game.physics.arcade.enable( this );
         
         this.body.collideWorldBounds    = true;
 
@@ -35,10 +35,15 @@ export class Player extends Phaser.Sprite {
         var changeWeaponButton  = this.gamepad.getButton( Phaser.Gamepad.XBOX360_RIGHT_BUMPER );
         changeWeaponButton.onDown.add( this.nextWeapon, this );
     }
+
+    get bullets() {
+        return this.weapons[ this.currentWeapon ].bullets;
+    }
     
     nextWeapon() {
         //  Tidy-up the current weapon
-        var bullets = this.weapons[this.currentWeapon].bullets;
+        // var bullets = this.weapons[ this.currentWeapon ].bullets;
+        var bullets = this.bullets;
         bullets.visible = false;
         bullets.callAll( 'reset', null, 0, 0 );
         bullets.setAll( 'exists', false );
@@ -46,7 +51,7 @@ export class Player extends Phaser.Sprite {
         //  Activate the new one
         this.currentWeapon++;
 
-        if (this.currentWeapon === this.weapons.length)
+        if  (this.currentWeapon === this.weapons.length )
         {
             this.currentWeapon = 0;
         }

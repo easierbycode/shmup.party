@@ -11,8 +11,8 @@ export class ExampleState extends Phaser.State {
     
     bg                  = null;
     music               = null;
-    pad1                = null;
-    pad2                = null;
+    gamepad1                = null;
+    gamepad2                = null;
     
     create() {
         this.physics.startSystem(Phaser.Physics.ARCADE);
@@ -36,12 +36,12 @@ export class ExampleState extends Phaser.State {
         this.music.play();
         
         this.game.input.gamepad.start();
-        this.pad1 = this.game.input.gamepad.pad1;
-        this.pad2 = this.game.input.gamepad.pad2;
+        this.gamepad1 = this.game.input.gamepad.pad1;
+        this.gamepad2 = this.game.input.gamepad.pad2;
         
-        [ this.pad1, this.pad2 ].forEach(function( pad ) {
-            pad.addCallbacks( pad, { onConnect: function() {
-                let newPlayer   = new Player( pad, this.game, (PLAYER.DEFAULT_X + (PLAYER.WIDTH * this.index)), PLAYER.DEFAULT_Y );
+        [ this.gamepad1, this.gamepad2 ].forEach(( gamepad ) => {
+            gamepad.addCallbacks( gamepad, { onConnect: () => {
+                let newPlayer   = new Player( gamepad, this.game, (PLAYER.DEFAULT_X + (PLAYER.WIDTH * this.index)), PLAYER.DEFAULT_Y );
                 this.game.players.add( newPlayer );
             } });
         });
@@ -67,7 +67,7 @@ export class ExampleState extends Phaser.State {
         let bullets = [];
         
         this.game.players.forEachAlive(( player ) => {
-            bullets.push( player.weapons[player.currentWeapon].bullets );
+            bullets.push( player.bullets );
 
             let gamepad = player.gamepad;
 
@@ -82,7 +82,7 @@ export class ExampleState extends Phaser.State {
         
             if ( gamepad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y) < -0.1 ) {
                 player.body.velocity.y    = -150;
-            } else if (gamepad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y) > 0.1) {
+            } else if ( gamepad.axis(Phaser.Gamepad.XBOX360_STICK_LEFT_Y) > 0.1 ) {
                 player.body.velocity.y    = 150;
             }
 
@@ -95,7 +95,7 @@ export class ExampleState extends Phaser.State {
             if ( thumbstickAngle != null ) {
                 player.rotation  = thumbstickAngle;
 
-                player.weapons[player.currentWeapon].fire();
+                player.weapons[ player.currentWeapon ].fire();
             }
         });
 
