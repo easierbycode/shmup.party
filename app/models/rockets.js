@@ -17,6 +17,7 @@ class Bullet extends Phaser.Bullet {
 
 export class Rockets extends Phaser.Weapon {
 
+    BLOWS_SHIT_UP       = true;
     hitPoints           = 4;
     rocketFireSound;
     

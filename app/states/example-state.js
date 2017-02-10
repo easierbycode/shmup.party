@@ -7,6 +7,7 @@ import { Player } from '../models/player';
 import { Zombie } from '../models/zombie';
 
 
+
 export class ExampleState extends Phaser.State {
     
     bg                  = null;
@@ -47,6 +48,14 @@ export class ExampleState extends Phaser.State {
         });
 
         WAVE1.createBaddies( this.game );
+        
+        this.game.time.events.add( Phaser.Timer.SECOND * 15, () => {
+            WAVE1.createBaddies( this.game );
+            this.game.time.events.add( Phaser.Timer.SECOND * 15, () => {
+                WAVE1.createBaddies( this.game );
+                this.game.time.events.add( Phaser.Timer.SECOND * 15, () => WAVE1.createBaddies( this.game ) );
+            });
+        });
         
         this.game.trigger(STATE_EVENTS.EXAMPLE_COMPLETED);
     }

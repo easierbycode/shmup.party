@@ -1,4 +1,12 @@
 
+// generate common body part names
+var commonParts             = Phaser.Animation.generateFrameNames( 'bodypart-common-', 1, 4, '', 4 );
+// commonParts should contain 2 of each common part
+commonParts.concat( commonParts );
+var uniqueParts             = Phaser.Animation.generateFrameNames( 'bodypart-unique-', 1, 4, '', 4 );
+var BODY_PARTS              = commonParts.concat( uniqueParts );
+
+
 export class Zombie extends Phaser.Sprite {
 
     alive   = true;
@@ -17,9 +25,16 @@ export class Zombie extends Phaser.Sprite {
         this.animations.add( 'die', Phaser.Animation.generateFrameNames('die-', 1, 64, '', 4), 30, false, false );
         this.animations.add( 'walk', Phaser.Animation.generateFrameNames('move-', 1, 64, '', 4), 30, true, false );
         this.animations.play( 'walk' );
+
+        // body part explosion
+        let emitter = game.add.emitter( 0, 0, BODY_PARTS.length );
+        emitter.makeParticles( 'zombieBodyParts', BODY_PARTS );
+        this.emitter = emitter;
     }
 
-    damage( hitPoints ) {
+    damage( bullet ) {
+
+        let hitPoints   = bullet.data.bulletManager.hitPoints || 1;
         
         this.health -= hitPoints;
 
@@ -27,7 +42,18 @@ export class Zombie extends Phaser.Sprite {
             this.alive      = false;
             this.body.moves = false;
 
-            this.animations.play( 'die', null, false, true );
+            if ( bullet.data.bulletManager.BLOWS_SHIT_UP )
+            {
+                this.kill();
+
+                // explode it's parts away with a random lifespan
+                this.emitter.x  = this.body.x;
+                this.emitter.y  = this.body.y;
+                this.emitter.start( true, this.game.rnd.between( 500, 1250 ), null, BODY_PARTS.length );
+
+            } else {
+                this.animations.play( 'die', null, false, true );
+            }
 
             return true;
         }

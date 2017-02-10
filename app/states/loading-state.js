@@ -7,15 +7,18 @@ export class LoadingState extends Phaser.State {
         this.load.setPreloadSprite(loader);
 
         this.load.atlasJSONHash( 'zombie', 'assets/images/zombie.png', 'assets/images/zombie.json' );
+        this.load.atlasJSONHash( 'zombieBodyParts', 'assets/images/zombie/body-parts.png', 'assets/images/zombie/body-parts.json' );
         
         this.load.audio( 'beam', ['assets/sounds/beam.mp3'] );
         this.load.audio( 'ledSpirals', ['assets/sounds/led-spirals.mp3'] );
         this.load.audio( 'pulseFire', ['assets/sounds/pulse-fire.mp3'] );
         this.load.audio( 'rocketFire', ['assets/sounds/rocket-fire.mp3'] );
+        this.load.audio( 'pentagramBulletFire', ['assets/sounds/pentagram-bullet-fire.mp3'] );
         this.load.audio( 'skullBulletFire', ['assets/sounds/skull-bullet-fire.mp3'] );
         
         this.load.image( 'dude', 'assets/images/trooper.png' );
         this.load.image( 'earth', 'assets/images/scorched-earth.png' );
+        this.load.image( 'pentagramBullet', 'assets/images/pentagram-bullet.png' );
         this.load.image( 'skullBullet', 'assets/images/skull-bullet.png' );
         this.load.image( 'bullet4', 'assets/images/bullet4.png' );
         
@@ -25,6 +28,7 @@ export class LoadingState extends Phaser.State {
         }
 
         this.load.spritesheet( 'kaboom', 'assets/images/explosion.png', 64, 64, 23 );
+        this.load.spritesheet( 'pacmanBullet', 'assets/images/pacman-spritesheet.png', 32, 32, 3 );
     }
 
     create() {

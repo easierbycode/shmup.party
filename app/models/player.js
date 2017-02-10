@@ -1,5 +1,7 @@
 
 import { Beam } from './beam';
+import { PacmanBullet } from './pacman-bullet';
+import { PentagramBullet } from './pentagram-bullet';
 import { Pattern } from './pattern';
 import { Rockets } from './rockets';
 import { ScaleBullet } from './scale-bullet';
@@ -24,6 +26,8 @@ export class Player extends Phaser.Sprite {
         this.anchor.setTo( 0.5, 0.5 );
         
         this.weapons.push( new Beam( this, game ) );
+        this.weapons.push( new PacmanBullet( this, game ) );
+        this.weapons.push( new PentagramBullet( this, game ) );
         this.weapons.push( new Pattern( this, game ) );
         this.weapons.push( new Rockets( this, game ) );
         this.weapons.push( new ScaleBullet( this, game ) );
@@ -34,10 +38,17 @@ export class Player extends Phaser.Sprite {
 
         var changeWeaponButton  = this.gamepad.getButton( Phaser.Gamepad.XBOX360_RIGHT_BUMPER );
         changeWeaponButton.onDown.add( this.nextWeapon, this );
+
+        var restartButton        = this.gamepad.getButton( Phaser.Gamepad.XBOX360_START );
+        restartButton.onDown.add( this.restart, this );
     }
 
     get bullets() {
         return this.weapons[ this.currentWeapon ].bullets;
+    }
+
+    restart() {
+        location.reload();
     }
     
     nextWeapon() {

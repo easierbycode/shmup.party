@@ -14,7 +14,7 @@ export class Game extends Phaser.Game {
         this.bulletHitBaddie   = function( baddie, bullet ) {
             bullet.kill();
             
-            let destroyed   = baddie.damage( bullet.data.bulletManager.hitPoints || 1 );
+            let destroyed   = baddie.damage( bullet );
         }
     }
 }

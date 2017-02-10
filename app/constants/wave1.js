@@ -6,7 +6,7 @@ import { Zombie } from '../models/zombie';
 export default {
 
     ALIENS    : 11,
-    ZOMBIES   : 22,
+    ZOMBIES   : 88,
 
     createBaddies : function( game ) {
       // for ( i = 0; i < this.ALIENS; i++ ) {
