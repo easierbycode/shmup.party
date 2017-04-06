@@ -40,7 +40,7 @@ export class Player extends Phaser.Sprite {
         changeWeaponButton.onDown.add( this.nextWeapon, this );
 
         var restartButton        = this.gamepad.getButton( Phaser.Gamepad.XBOX360_START );
-        restartButton.onDown.add( this.restart, this );
+        // restartButton.onDown.add( this.restart, this );
     }
 
     get bullets() {
