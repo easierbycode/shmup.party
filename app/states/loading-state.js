@@ -10,6 +10,7 @@ export class LoadingState extends Phaser.State {
         
         this.load.setPreloadSprite(loader);
 
+        this.load.atlasJSONHash( 'alien', 'assets/images/alien.png', 'assets/images/alien.json' );
         this.load.atlasJSONHash( 'zombie', 'assets/images/zombie.png', 'assets/images/zombie.json' );
         this.load.atlasJSONHash( 'zombieBodyParts', 'assets/images/zombie/body-parts.png', 'assets/images/zombie/body-parts.json' );
         
